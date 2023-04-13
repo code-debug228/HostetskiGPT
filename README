@@ -8,7 +8,7 @@ This repository contains the FreeScout ChatGPT Integration Module, which connect
 - Customizable starting message to set the AI's role (e.g., support agent, sales manager, etc.), associate it with your brand, or provide additional context
 
 ## Requirements
-To use this module, you will need an API key for ChatGPT, which can be obtained from the OpenAI platform at [https://platform.openai.com/account/api-keys](https://platform.openai.com/account/api-keys).
+To use this module, you will need an API key for ChatGPT, which can be obtained from the OpenAI platform at https://platform.openai.com/account/api-keys.
 
 ## Configuration
 1. Install the FreeScout ChatGPT Integration Module
