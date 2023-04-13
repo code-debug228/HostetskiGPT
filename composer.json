@@ -1,0 +1,33 @@
+{
+    "name": "freescout/hostetskigpt",
+    "description": "",
+    "authors": [
+        {
+            "name": "FreeScout",
+            "email": "support@freescout.net"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Modules\\HostetskiGPT\\Providers\\HostetskiGPTServiceProvider"
+            ],
+            "aliases": {
+                
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\HostetskiGPT\\": ""
+        }
+    },
+    "require": {
+        "tectalic/openai": "^1.4"
+    },
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
+    }
+}
