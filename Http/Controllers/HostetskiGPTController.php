@@ -78,7 +78,13 @@ class HostetskiGPTController extends Controller
 
     public function get(Request $request) {
         if (Auth::user() === null) return Response::json(["error" => "Unauthorized"], 401);
-        $openaiClient = \Tectalic\OpenAi\Manager::build(new \GuzzleHttp\Client(), new \Tectalic\OpenAi\Authentication($this->token));
+        $openaiClient = \Tectalic\OpenAi\Manager::build(new \GuzzleHttp\Client(
+            [
+                'timeout' => config('app.curl_timeout'),
+                'connect_timeout' => config('app.curl_connect_timeout'),
+                'proxy' => config('app.proxy'),
+            ]
+        ), new \Tectalic\OpenAi\Authentication($this->token));
 
         $response = $openaiClient->chatCompletions()->create(
         new \Tectalic\OpenAi\Models\ChatCompletions\CreateRequest([
