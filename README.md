@@ -18,6 +18,9 @@ To use this module, you will need an API key for ChatGPT, which can be obtained 
 2. Add your ChatGPT API key to the module's configuration settings (Http/Controllers/HostetskiGPTController.php  - variable $token)
 3. Set a starting message for the AI in the configuration settings. This message will help the AI to associate itself with a specific role, your brand, or provide additional context for generating responses (Http/Controllers/HostetskiGPTController.php - variable $startmessage).
 
+## TODO
+ - [ ] Settings via web interface
+
 ## Contributing
 This is an early version of the FreeScout ChatGPT Integration Module, and we appreciate any feedback, suggestions, or contributions to help improve the module. Please feel free to open issues or submit pull requests on GitHub, or send your messages and suggestions to our email: [support@cloudcenter.ovh](mailto:support@cloudcenter.ovh).
 
