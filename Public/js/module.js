@@ -28,15 +28,12 @@ function hostetskigptInit() {
                 $(".chatgpt-get").on('click', function(e) {
                     e.preventDefault();
                     const text = $(e.target).closest(".thread").children(".thread-message").children(".thread-body").children(".thread-content").get(0).innerHTML;
-                    const query = text.replace("<.*?>", "");
+                    const query = encodeURIComponent(text.replace("<.*?>", ""));
                     const thread_id = $(e.target).closest(".thread").attr("id").replace("thread-", "");
-                    $.ajax({
-                        url: '/hostetskigpt/get?query='+query+'&thread_id='+thread_id,
-                        dataType: 'json',
-                        success: function(response, status) {
-                            //$(".chatgpt-answers").prepend("<hr style=\"border-top: 2px solid #bbb;\"/><div style=\"font-size: 12px;\"><strong style=\"font-size: 14px;\">"+response.query+"</strong><br/>"+response.answer+"</div>")
-                            $(e.target).closest(".thread").prepend("<div class=\"thread-gpt\"><strong>ChatGPT:</strong><br />"+response.answer+"</div>");
-                        }
+                    fsAjax("query=" + query + "&thread_id=" + thread_id, '/hostetskigpt/generate', function (response) {
+                        $(e.target).closest(".thread").prepend("<div class=\"thread-gpt\"><strong>ChatGPT:</strong><br />"+response.answer+"</div>");
+                    }, true, function() {
+                        showFloatingAlert('error', Lang.get("messages.ajax_error"));
                     });
                 });
 	});

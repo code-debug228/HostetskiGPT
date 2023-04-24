@@ -76,7 +76,7 @@ class HostetskiGPTController extends Controller
     {
     }
 
-    public function get(Request $request) {
+    public function generate(Request $request) {
         if (Auth::user() === null) return Response::json(["error" => "Unauthorized"], 401);
         $openaiClient = \Tectalic\OpenAi\Manager::build(new \GuzzleHttp\Client(
             [
@@ -96,14 +96,14 @@ class HostetskiGPTController extends Controller
                 ],
                 [
                     'role' => 'user',
-                    'content' => $request->query('query')
+                    'content' => $request->get('query')
                 ]
             ],
             'max_tokens' => 1024
         ])
         )->toModel();
 
-        $thread = Thread::find($request->query('thread_id'));
+        $thread = Thread::find($request->get('thread_id'));
         $answers = json_decode($thread->chatgpt, true);
         if ($answers === null) {
             $answers = [];
@@ -113,7 +113,7 @@ class HostetskiGPTController extends Controller
         $thread->save();
 
         return Response::json([
-            'query' => $request->query('query'),
+            'query' => $request->get('query'),
             'answer' => $response->choices[0]->message->content
         ], 200);
     }
