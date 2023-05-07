@@ -3,6 +3,7 @@
 This repository contains the FreeScout ChatGPT Integration Module, which connects FreeScout with the powerful language model ChatGPT by OpenAI. This integration enables the generation of AI-based responses for incoming messages, providing a more efficient and intelligent support system for your helpdesk.
 
 ![FreeScout ChatGPT Integration Module Example](https://my.hostetski.com/files/img/hostetskigpt.jpg "Integration Module Exapmle")
+![FreeScout ChatGPT Integration Module Example](https://my.hostetski.com/files/git/gpt.gif "Integration Module Exapmle")
 
 
 ## Features
