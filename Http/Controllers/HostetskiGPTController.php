@@ -7,12 +7,11 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Thread;
+use App\Mailbox;
+use Modules\HostetskiGPT\Entities\GPTSettings;
 
 class HostetskiGPTController extends Controller
 {
-
-    public string $token = "sk-...";
-    public string $startmessage = "Act like a support agent";
 
     /**
      * Display a listing of the resource.
@@ -78,28 +77,29 @@ class HostetskiGPTController extends Controller
 
     public function generate(Request $request) {
         if (Auth::user() === null) return Response::json(["error" => "Unauthorized"], 401);
+        $settings = GPTSettings::findOrFail($request->get("mailbox_id"));
         $openaiClient = \Tectalic\OpenAi\Manager::build(new \GuzzleHttp\Client(
             [
                 'timeout' => config('app.curl_timeout'),
                 'connect_timeout' => config('app.curl_connect_timeout'),
                 'proxy' => config('app.proxy'),
             ]
-        ), new \Tectalic\OpenAi\Authentication($this->token));
+        ), new \Tectalic\OpenAi\Authentication($settings->api_key));
 
         $response = $openaiClient->chatCompletions()->create(
         new \Tectalic\OpenAi\Models\ChatCompletions\CreateRequest([
-            'model'  => 'gpt-3.5-turbo',
+            'model'  => $settings->model,
             'messages' => [
                 [
                     'role' => 'system',
-                    'content' => $this->startmessage
+                    'content' => $settings->start_message
                 ],
                 [
                     'role' => 'user',
                     'content' => $request->get('query')
                 ]
             ],
-            'max_tokens' => 1024
+            'max_tokens' => $settings->token_limit
         ])
         )->toModel();
 
@@ -133,6 +133,50 @@ class HostetskiGPTController extends Controller
             }
         }
         return Response::json(["answers" => $result], 200);
+    }
+
+    public function settings($mailbox_id) {
+        $mailbox = Mailbox::findOrFail($mailbox_id);
+
+        $settings = GPTSettings::find($mailbox_id);
+
+        if (empty($settings)) {
+            $settings['mailbox_id'] = $mailbox_id;
+            $settings['api_key'] = "";
+            $settings['token_limit'] = "";
+            $settings['start_message'] = "";
+            $settings['enabled'] = false;
+            $settings['model'] = "";
+        }
+
+        return view('hostetskigpt::settings', [
+            'mailbox'   => $mailbox,
+            'settings'  => $settings
+        ]);
+    }
+
+    public function saveSettings($mailbox_id, Request $request) {
+        //return $request->get('model');
+        GPTSettings::updateOrCreate(
+            ['mailbox_id' => $mailbox_id],
+            [
+                'api_key' => $request->get("api_key"),
+                'enabled' => isset($_POST['gpt_enabled']),
+                'token_limit' => $request->get('token_limit'),
+                'start_message' => $request->get('start_message'),
+                'model' => $request->get('model')
+            ]
+        );
+
+        return redirect()->route('hostetskigpt.settings', ['mailbox_id' => $mailbox_id]);
+    }
+
+    public function checkIsEnabled(Request $request) {
+        $settings = GPTSettings::find($request->query("mailbox"));
+        if (empty($settings)) {
+            return Response::json(['enabled'=> false], 200);
+        }
+        return Response::json(['enabled' => $settings['enabled']], 200);
     }
 
 }

@@ -1,0 +1,9 @@
+{
+  "OpenAI API key": "API ключ OpenAI",
+  "Token limit": "Лимит токенов",
+  "Prompts": "Подсказки",
+  "Act like a support agent": "Веди себя как агент поддержки",
+  "Enable GPT": "Включить GPT",
+  "Generate answer(GPT)": "Сгенерировать ответ(GPT)",
+  "Model": "Модель"
+}

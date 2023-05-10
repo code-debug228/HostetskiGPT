@@ -18,13 +18,16 @@ To use this module, you will need an API key for ChatGPT, which can be obtained 
 ## Configuration
 1. Install the FreeScout ChatGPT Integration Module
 2. Add your ChatGPT API key to the module's configuration page.
-3. Set a "promts message" for the AI.
+3. Set a "prompts message" for the AI.
 
 ![FreeScout ChatGPT Integration Module Example](https://my.hostetski.com/files/git/gpt-settings.png "GPT Setting Page")
 
 ## TODO
- - [ ] Settings via web interface
+ - [x] Settings via web interface
  - [x] Loader, which shows that the response is being generated and you have to wait a bit
+ - [ ] Multiple prompts
+ - [ ] Grammar check
+ - [ ] Select multiple answers in a conversation
 
 ## Contributing
 This is an early version of the FreeScout ChatGPT Integration Module, and we appreciate any feedback, suggestions, or contributions to help improve the module. Please feel free to open issues or submit pull requests on GitHub, or send your messages and suggestions to our email: [support@cloudcenter.ovh](mailto:support@cloudcenter.ovh).

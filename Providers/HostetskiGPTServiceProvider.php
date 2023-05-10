@@ -4,6 +4,7 @@ namespace Modules\HostetskiGPT\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
+use App\Thread;
 
 class HostetskiGPTServiceProvider extends ServiceProvider
 {
@@ -43,6 +44,21 @@ class HostetskiGPTServiceProvider extends ServiceProvider
         \Eventy::addAction('javascript', function() {
             echo 'hostetskigptInit();';
         });
+
+        \Eventy::addAction('mailboxes.settings.menu', function($mailbox) {
+            if (auth()->user()->isAdmin()) {
+                echo \View::make('hostetskigpt::partials/settings_menu', ['mailbox' => $mailbox])->render();
+            }
+        }, 80);
+
+        \Eventy::addAction('thread.menu', function ($thread) {
+            if ($thread->type == Thread::TYPE_LINEITEM) {
+                return;
+            }
+            ?>
+            <li><a class="chatgpt-get" href="#" target="_blank" onclick='generateAnswer(event)' role="button"><?php echo __("Generate answer(GPT)")?></a></li>
+            <?php
+        }, 100);
     }
 
     /**
