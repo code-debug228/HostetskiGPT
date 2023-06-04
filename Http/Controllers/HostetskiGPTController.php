@@ -125,10 +125,13 @@ class HostetskiGPTController extends Controller
         $result = [];
         foreach ($threads as $thread) {
             if ($thread->chatgpt !== "{}") {
+                $answers = [];
                 $answers_text = json_decode($thread->chatgpt, true);
                 if ($answers_text === null) continue;
-                $answer_text = end($answers_text);
-                $answer = ["thread" => $thread->id, "answer" => $answer_text];
+                foreach ($answers_text as $answer_text) {
+                    array_push($answers, $answer_text);
+                }
+                $answer = ["thread" => $thread->id, "answers" => $answers];
                 array_push($result, $answer);
             }
         }

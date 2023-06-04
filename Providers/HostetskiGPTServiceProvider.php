@@ -42,6 +42,7 @@ class HostetskiGPTServiceProvider extends ServiceProvider
 
         // JavaScript in the bottom
         \Eventy::addAction('javascript', function() {
+            echo 'const copiedToClipboardText = "' . __("Copied to clipboard") . '";';
             echo 'hostetskigptInit();';
         });
 
