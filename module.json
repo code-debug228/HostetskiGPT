@@ -3,6 +3,7 @@
     "alias": "hostetskigpt",
     "description": "Module for requests to GPT",
     "version": "1.0.2",
+    "img": "https://hostetski.com/files/fs/hostetskigpt_module_logo.png",
     "detailsUrl": "",
     "author": "Hostetski",
     "authorUrl": "",
