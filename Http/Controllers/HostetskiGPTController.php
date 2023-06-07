@@ -99,7 +99,7 @@ class HostetskiGPTController extends Controller
                     'content' => $request->get('query')
                 ]
             ],
-            'max_tokens' => $settings->token_limit
+            'max_tokens' => (integer) $settings->token_limit
         ])
         )->toModel();
 
