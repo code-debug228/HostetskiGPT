@@ -5,6 +5,7 @@ namespace Modules\HostetskiGPT\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
 use App\Thread;
+use Nwidart\Modules\Facades\Module;
 
 class HostetskiGPTServiceProvider extends ServiceProvider
 {
@@ -42,7 +43,14 @@ class HostetskiGPTServiceProvider extends ServiceProvider
 
         // JavaScript in the bottom
         \Eventy::addAction('javascript', function() {
-            echo 'const copiedToClipboardText = "' . __("Copied to clipboard") . '";';
+            $version = Module::find('hostetskigpt')->get('version');
+            $copiedToClipboard = __("Copied to clipboard");
+            $updateAvailable = __('Update available for module ');
+            echo "const hostetskiGPTData = {" .
+                    "'copiedToClipboard': '{$copiedToClipboard}'," .
+                    "'updateAvailable': '{$updateAvailable}'," .
+                    "'version': '{$version}'," .
+                "};";
             echo 'hostetskigptInit();';
         });
 

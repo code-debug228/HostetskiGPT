@@ -29,6 +29,24 @@ function hostetskigptInit() {
                 }
             });
         }
+
+        if (document.location.pathname === "/modules/list") {
+            $.ajax({
+                url: 'https://updates.hostetski.com/hostetskigpt/updates',
+                dataType: 'json',
+                success: function (response, status) {
+                    if (response.current_version != hostetskiGPTData.version) {
+                        $('#installed').after(`
+                            <div class="row-container margin-top">
+                                <div class="alert alert-warning">
+                                    ${hostetskiGPTData.updateAvailable} <a href="https://github.com/code-debug228/HostetskiGPT">HostetskiGPT</a>
+                                </div>
+                            </div>
+                        `)
+                    }
+                }
+            });
+        }
 	});
 }
 
@@ -151,5 +169,5 @@ function copyAnswer(e) {
     const thread_id = $(e.target).closest(".thread").attr("data-thread_id");
     const current_answer = $("#thread-" + thread_id + " .gpt-answer").not(".hidden");
     navigator.clipboard.writeText(current_answer[0].innerHTML.replace(/<\/?.*?>/g, ""));
-    showFloatingAlert('success', copiedToClipboardText);
+    showFloatingAlert('success', hostetskiGPTData.copiedToClipboard);
 }
