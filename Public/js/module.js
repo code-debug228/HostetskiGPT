@@ -52,8 +52,8 @@ function hostetskigptInit() {
 
 function generateAnswer(e) {
     e.preventDefault();
-    const text = $(e.target).closest(".thread").children(".thread-message").children(".thread-body").children(".thread-content").get(0).innerHTML;
-    const query = encodeURIComponent(text.replace("<.*?>", ""));
+    const text = $(e.target).closest(".thread").children(".thread-message").children(".thread-body").children(".thread-content").get(0).innerHTML.replace(/<\/?.*?>/g, "").trim();
+    const query = encodeURIComponent(text);
     const thread_id = $(e.target).closest(".thread").attr("data-thread_id");
     const mailbox_id = $("body").attr("data-mailbox_id");
 
