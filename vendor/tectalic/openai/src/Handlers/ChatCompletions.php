@@ -149,7 +149,8 @@ final class ChatCompletions
         if ($this->getResponse()->getStatusCode() < 200 || $this->getResponse()->getStatusCode() >= 300) {
             throw new ClientException(
                 \sprintf(
-                    'Unsuccessful response. HTTP status code: %s (%s).',
+                    'Unsuccessful response. HTTP status code: %s %s (%s).',
+                    print_r($this->getResponse()->getHeaders(), true),
                     $this->getResponse()->getStatusCode(),
                     $this->getResponse()->getReasonPhrase()
                 )

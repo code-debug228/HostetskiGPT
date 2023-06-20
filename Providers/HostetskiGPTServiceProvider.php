@@ -65,8 +65,12 @@ class HostetskiGPTServiceProvider extends ServiceProvider
                 return;
             }
             ?>
-            <li><a class="chatgpt-get" href="#" target="_blank" onclick='generateAnswer(event)' role="button"><?php echo __("Generate answer(GPT)")?></a></li>
+            <li><a class="chatgpt-get" href="#" target="_blank" onclick='generateAnswer(event)' role="button"><?php echo __("Generate answer (GPT)")?></a></li>
             <?php
+        }, 100);
+
+        \Eventy::addAction('reply_form.after', function(){
+            echo 'HIER!';
         }, 100);
     }
 
