@@ -41,6 +41,12 @@ class HostetskiGPTServiceProvider extends ServiceProvider
             return $javascripts;
         });
 
+        // Add module's CSS file to the application layout.
+        \Eventy::addFilter('stylesheets', function($stylesheets) {
+            array_push($stylesheets, \Module::getPublicPath("hostetskigpt").'/css/module.css');
+            return $stylesheets;
+        });
+
         // JavaScript in the bottom
         \Eventy::addAction('javascript', function() {
             $version = Module::find('hostetskigpt')->get('version');
