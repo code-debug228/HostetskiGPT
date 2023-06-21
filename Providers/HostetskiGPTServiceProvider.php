@@ -75,9 +75,6 @@ class HostetskiGPTServiceProvider extends ServiceProvider
             <?php
         }, 100);
 
-        \Eventy::addAction('reply_form.after', function(){
-            echo 'HIER!';
-        }, 100);
     }
 
     /**
