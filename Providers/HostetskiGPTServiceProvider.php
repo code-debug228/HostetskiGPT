@@ -2,9 +2,12 @@
 
 namespace Modules\HostetskiGPT\Providers;
 
+use App\Mailbox;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
 use App\Thread;
+use Modules\HostetskiGPT\Entities\GPTSettings;
 use Nwidart\Modules\Facades\Module;
 
 class HostetskiGPTServiceProvider extends ServiceProvider
@@ -15,6 +18,9 @@ class HostetskiGPTServiceProvider extends ServiceProvider
      * @var bool
      */
     protected $defer = false;
+
+    //save the mailbox for re-use in the javascripts hook
+    private $mailbox = null;
 
     /**
      * Boot the application events.
@@ -38,6 +44,7 @@ class HostetskiGPTServiceProvider extends ServiceProvider
         // Add module's JS file to the application layout.
         \Eventy::addFilter('javascripts', function($javascripts) {
             array_push($javascripts, \Module::getPublicPath("hostetskigpt").'/js/module.js');
+            array_push($javascripts, "https://cdn.jsdelivr.net/npm/sweetalert2@11");
             return $javascripts;
         });
 
@@ -47,15 +54,25 @@ class HostetskiGPTServiceProvider extends ServiceProvider
             return $stylesheets;
         });
 
+        //catch the mailbox for the current request
+        \Eventy::addFilter('mailbox.show_buttons', function($show, $mailbox){
+            $this->mailbox =$mailbox;
+            return $show;
+        }, 20 , 2);
+
         // JavaScript in the bottom
         \Eventy::addAction('javascript', function() {
             $version = Module::find('hostetskigpt')->get('version');
             $copiedToClipboard = __("Copied to clipboard");
             $updateAvailable = __('Update available for module ');
+            $settings = $this->mailbox ? GPTSettings::find($this->mailbox->id) : null;
+            $start_message = $settings ? $settings->start_message : "";
+
             echo "const hostetskiGPTData = {" .
                     "'copiedToClipboard': '{$copiedToClipboard}'," .
                     "'updateAvailable': '{$updateAvailable}'," .
                     "'version': '{$version}'," .
+                    "'start_message': '{$start_message}'," .
                 "};";
             echo 'hostetskigptInit();';
         });

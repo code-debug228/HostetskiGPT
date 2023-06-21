@@ -94,7 +94,7 @@ class HostetskiGPTController extends Controller
             'messages' => [
                 [
                     'role' => 'system',
-                    'content' => $settings->start_message . ($command ? ". $command" : "")
+                    'content' => $command ?? $settings->start_message
                 ],
                 [
                     'role' => 'user',

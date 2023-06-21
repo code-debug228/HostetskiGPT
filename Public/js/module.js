@@ -177,8 +177,17 @@ function copyAnswer(e) {
     showFloatingAlert('success', hostetskiGPTData.copiedToClipboard);
 }
 
-function injectGptAnswer(e){
-    let command = prompt("Aufgabe", "");
+async function injectGptAnswer(e){
+    const { value: command } = await Swal.fire({
+        input: 'textarea',
+        inputLabel: 'Anfrage an Chat GPT',
+        inputValue: hostetskiGPTData.start_message+"\n",
+        width: '50em',
+        inputAttributes: {
+            'aria-label': 'Type your message here'
+        },
+        showCancelButton: true
+    })
     if (!command) {
         return;
     }
@@ -187,7 +196,6 @@ function injectGptAnswer(e){
     const query = encodeURIComponent(text);
     const thread_id = thread.attr("data-thread_id");
     const mailbox_id = $("body").attr("data-mailbox_id");
-    const loader = $("<img class=\"gpt-loader\" src=\"/modules/hostetskigpt/img/loading.gif\" alt=\"Test\">");
     $(".gptbutton").addClass("disabled");
 
     fsAjax("mailbox_id=" + mailbox_id + "&command=" + encodeURIComponent(command) + "&query=" + query + "&thread_id=" + thread_id, '/hostetskigpt/generate', function (response) {
