@@ -1,0 +1,9 @@
+@keyframes rotateSpinner {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.gptbutton.disabled i {
+    animation: rotateSpinner 800ms linear infinite;
+}

@@ -28,6 +28,11 @@ function hostetskigptInit() {
                     });
                 }
             });
+            //add button to reply form
+            $(".conv-reply-body .note-toolbar > .note-btn-group:first").append('<button class="gptbutton btn btn-default btn-sm" aria-label="GPT Antwort" data-original-title="GPT Antwort" onclick="injectGptAnswer(this)">' +
+                '<i class="glyphicon glyphicon-sunglasses"></i>' +
+                '</button>'
+            );
         }
 
         if (document.location.pathname === "/modules/list") {
@@ -87,7 +92,7 @@ function addAnswer(thread_id, text) {
                     </svg>
                 </div>
                 <div class="gpt-answers">
-                    
+
                 </div>
                 <span class="gpt-copy-icon" onclick="copyAnswer(event)">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard" viewBox="0 0 16 16">
@@ -170,4 +175,34 @@ function copyAnswer(e) {
     const current_answer = $("#thread-" + thread_id + " .gpt-answer").not(".hidden");
     navigator.clipboard.writeText(current_answer[0].innerHTML.replace(/<\/?.*?>/g, "").replaceAll("```", ""));
     showFloatingAlert('success', hostetskiGPTData.copiedToClipboard);
+}
+
+async function injectGptAnswer(e){
+    const { value: command } = await Swal.fire({
+        input: 'textarea',
+        inputLabel: 'Anfrage an Chat GPT',
+        inputValue: hostetskiGPTData.start_message+"\n",
+        width: '50em',
+        inputAttributes: {
+            'aria-label': 'Type your message here'
+        },
+        showCancelButton: true
+    })
+    if (!command) {
+        return;
+    }
+    const thread = $(".thread-type-customer:first");
+    const text = thread.children(".thread-message").children(".thread-body").children(".thread-content").get(0).innerHTML.replace(/<\/?.*?>/g, "").trim();
+    const query = encodeURIComponent(text);
+    const thread_id = thread.attr("data-thread_id");
+    const mailbox_id = $("body").attr("data-mailbox_id");
+    $(".gptbutton").addClass("disabled");
+
+    fsAjax("mailbox_id=" + mailbox_id + "&command=" + encodeURIComponent(command) + "&query=" + query + "&thread_id=" + thread_id, '/hostetskigpt/generate', function (response) {
+        $('#body').summernote('pasteHTML', response.answer);
+        $(".gptbutton").removeClass("disabled");
+    }, true, function() {
+        $(".gptbutton").removeClass("disabled");
+        showFloatingAlert('error', Lang.get("messages.ajax_error"));
+    });
 }

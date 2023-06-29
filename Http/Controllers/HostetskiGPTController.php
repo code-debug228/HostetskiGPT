@@ -86,13 +86,15 @@ class HostetskiGPTController extends Controller
             ]
         ), new \Tectalic\OpenAi\Authentication($settings->api_key));
 
+        $command = $request->get("command");
+
         $response = $openaiClient->chatCompletions()->create(
         new \Tectalic\OpenAi\Models\ChatCompletions\CreateRequest([
             'model'  => $settings->model,
             'messages' => [
                 [
                     'role' => 'system',
-                    'content' => $settings->start_message
+                    'content' => $command ?? $settings->start_message
                 ],
                 [
                     'role' => 'user',
