@@ -120,7 +120,11 @@ class HostetskiGPTController extends Controller
         )->toModel();
 
         $thread = Thread::find($request->get('thread_id'));
-        $answers = json_decode($thread->chatgpt, true);
+        if ($thread->chatgpt === null) {
+            $answers = [];
+        } else {
+            $answers = json_decode($thread->chatgpt, true);
+        }
         if ($answers === null) {
             $answers = [];
         }
@@ -140,7 +144,7 @@ class HostetskiGPTController extends Controller
         $threads = Thread::where("conversation_id", $conversation)->get();
         $result = [];
         foreach ($threads as $thread) {
-            if ($thread->chatgpt !== "{}") {
+            if ($thread->chatgpt !== "{}" && $thread->chatgpt !== null) {
                 $answers = [];
                 $answers_text = json_decode($thread->chatgpt, true);
                 if ($answers_text === null) continue;

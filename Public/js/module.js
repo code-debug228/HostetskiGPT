@@ -1,6 +1,5 @@
 function hostetskigptInit() {
 	$(document).ready(function(){
-        addStyles();
 
         if (document.location.pathname.startsWith("/conversation")) {
             const mailbox_id = $("body").attr("data-mailbox_id");
@@ -23,12 +22,13 @@ function hostetskigptInit() {
                         item.answers.forEach(function (i, ind, arr) {
                             addAnswer(item.thread, i);
                         });
-                        $("#thread-" + item.thread + " .gpt-answer").last().removeClass("hidden");
-                        $("#thread-" + item.thread + " .gpt-current-answer").text($("#thread-" + item.thread + " .gpt-answers div").length);
+                        $(`#thread-${item.thread} .gpt-answer`).last().removeClass("hidden");
+                        $(`#thread-${item.thread} .gpt-current-answer`).text($(`#thread-${item.thread} .gpt-answers div`).length);
                     });
                 }
             });
-            //add button to reply form
+
+            // Add button to reply form
             $(".conv-reply-body .note-toolbar > .note-btn-group:first").append('<button class="gptbutton btn btn-default btn-sm" aria-label="GPT Antwort" data-original-title="GPT Antwort" onclick="injectGptAnswer(this)">' +
                 '<i class="glyphicon glyphicon-sunglasses"></i>' +
                 '</button>'
@@ -66,23 +66,23 @@ function generateAnswer(e) {
     const customer_email = encodeURIComponent($(".customer-email").text().trim());
     const conversation_subject = encodeURIComponent($(".conv-subjtext span").text().trim());
 
-    $('#thread-' + thread_id + ' .thread-info').prepend("<img class=\"gpt-loader\" src=\"/modules/hostetskigpt/img/loading.gif\" alt=\"Test\">");
+    $(`#thread-${thread_id} .thread-info`).prepend("<img class=\"gpt-loader\" src=\"/modules/hostetskigpt/img/loading.gif\" alt=\"Test\">");
 
     fsAjax(`mailbox_id=${mailbox_id}&query=${query}&thread_id=${thread_id}&customer_name=${customer_name}&customer_email=${customer_email}&conversation_subject=${conversation_subject}`, '/hostetskigpt/generate', function (response) {
-        $("#thread-" + thread_id + " .gpt-answer").last().addClass("hidden");
+        $(`#thread-${thread_id} .gpt-answer`).last().addClass("hidden");
         addAnswer(thread_id, response.answer);
-        $("#thread-" + thread_id + " .gpt-answer").last().removeClass("hidden");
-        $("#thread-" + thread_id + " .gpt-current-answer").text($("#thread-" + thread_id + " .gpt-answers div").length);
-        $('#thread-' + thread_id + ' .gpt-loader').remove();
+        $(`#thread-${thread_id} .gpt-answer`).last().removeClass("hidden");
+        $(`#thread-${thread_id} .gpt-current-answer`).text($(`#thread-${thread_id} .gpt-answers div`).length);
+        $(`#thread-${thread_id} .gpt-loader`).remove();
     }, true, function() {
         showFloatingAlert('error', Lang.get("messages.ajax_error"));
-        $('#thread-' + thread_id + ' .gpt-loader').remove();
+        $(`#thread-${thread_id} .gpt-loader`).remove();
     });
 }
 
 function addAnswer(thread_id, text) {
-    if (!$("#thread-" + thread_id + " .gpt").length) {
-        $("#thread-" + thread_id).prepend(`<div class="gpt">
+    if (!$(`#thread-${thread_id} .gpt`).length) {
+        $(`#thread-${thread_id}`).prepend(`<div class="gpt">
             <strong>ChatGPT:</strong>
             <br />
             <div class="gpt-answers-data">
@@ -107,52 +107,17 @@ function addAnswer(thread_id, text) {
             </div>
         </div>`);
     }
-    $("#thread-" + thread_id + " .gpt-answers").append(`
+    $(`#thread-${thread_id} .gpt-answers`).append(`
         <div class="gpt-answer hidden">${text}</div>
     `)
-    $("#thread-" + thread_id + " .gpt-max-answer").text($("#thread-" + thread_id + " .gpt-answers div").length);
-}
-
-function addStyles() {
-    $("body").prepend(`<style>
-            .gpt {
-               margin: 30px;
-               padding: 10px 20px;
-               text-align: center;
-               border: 1px solid #ebe534;
-               background-color: rgba(221, 224, 36, 0.2);
-           }
-           .gpt-loader {
-               width: 18px;
-               height: 18px;
-               margin-right: 4px;
-           }
-           .gpt-answers-data {
-               text-align: left;
-               display: flex;
-               justify-content: space-between;
-               align-items: center;
-           }
-           .gpt-nav {
-               display: flex;
-               justify-content: space-between;
-               align-items: center;
-               margin-right: 20px;
-           }
-           .gpt-copy-icon {
-               display: inline-flex;
-               align-items: center;
-               margin-left: 20px;
-           }
-        </style>
-        `);
+    $(`#thread-${thread_id} .gpt-max-answer`).text($(`#thread-${thread_id} .gpt-answers div`).length);
 }
 
 function previousAnswer(e) {
     const thread_id = $(e.target).closest(".thread").attr("data-thread_id");
-    const current_answer = $("#thread-" + thread_id + " .gpt-answer").not(".hidden");
+    const current_answer = $(`#thread-${thread_id} .gpt-answer`).not(".hidden");
     const previous_answer = current_answer.prev();
-    const current_answer_number = $("#thread-" + thread_id + " .gpt-current-answer");
+    const current_answer_number = $(`#thread-${thread_id} .gpt-current-answer`);
 
     if (!previous_answer.length) return
 
@@ -163,9 +128,9 @@ function previousAnswer(e) {
 
 function nextAnswer(e) {
     const thread_id = $(e.target).closest(".thread").attr("data-thread_id");
-    const current_answer = $("#thread-" + thread_id + " .gpt-answer").not(".hidden");
+    const current_answer = $(`#thread-${thread_id} .gpt-answer`).not(".hidden");
     const next_answer = current_answer.next();
-    const current_answer_number = $("#thread-" + thread_id + " .gpt-current-answer");
+    const current_answer_number = $(`#thread-${thread_id} .gpt-current-answer`);
 
     if (!next_answer.length) return
 
@@ -176,7 +141,7 @@ function nextAnswer(e) {
 
 function copyAnswer(e) {
     const thread_id = $(e.target).closest(".thread").attr("data-thread_id");
-    const current_answer = $("#thread-" + thread_id + " .gpt-answer").not(".hidden");
+    const current_answer = $(`#thread-${thread_id} .gpt-answer`).not(".hidden");
     navigator.clipboard.writeText(current_answer[0].innerHTML.replace(/<\/?.*?>/g, "").replaceAll("```", ""));
     showFloatingAlert('success', hostetskiGPTData.copiedToClipboard);
 }
