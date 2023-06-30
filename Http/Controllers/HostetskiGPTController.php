@@ -87,20 +87,34 @@ class HostetskiGPTController extends Controller
         ), new \Tectalic\OpenAi\Authentication($settings->api_key));
 
         $command = $request->get("command");
+        $messages = [[
+            'role' => 'system',
+            'content' => $command ?? $settings->start_message
+        ]];
+
+        if ($settings->client_data_enabled) {
+            $customerName = $request->get("customer_name");
+            $customerEmail = $request->get("customer_email");
+            $conversationSubject = $request->get("conversation_subject");
+            array_push($messages, [
+                'role' => 'system',
+                'content' => __('Conversation subject is ":subject", customer name is ":name", customer email is ":email"', [
+                    'subject' => $conversationSubject,
+                    'name' => $customerName,
+                    'email' => $customerEmail
+                ])
+            ]);
+        }
+
+        array_push($messages, [
+            'role' => 'user',
+            'content' => $request->get('query')
+        ]);
 
         $response = $openaiClient->chatCompletions()->create(
         new \Tectalic\OpenAi\Models\ChatCompletions\CreateRequest([
             'model'  => $settings->model,
-            'messages' => [
-                [
-                    'role' => 'system',
-                    'content' => $command ?? $settings->start_message
-                ],
-                [
-                    'role' => 'user',
-                    'content' => $request->get('query')
-                ]
-            ],
+            'messages' => $messages,
             'max_tokens' => (integer) $settings->token_limit
         ])
         )->toModel();
@@ -152,6 +166,7 @@ class HostetskiGPTController extends Controller
             $settings['start_message'] = "";
             $settings['enabled'] = false;
             $settings['model'] = "";
+            $settings['client_data_enabled'] = false;
         }
 
         return view('hostetskigpt::settings', [
@@ -169,7 +184,8 @@ class HostetskiGPTController extends Controller
                 'enabled' => isset($_POST['gpt_enabled']),
                 'token_limit' => $request->get('token_limit'),
                 'start_message' => $request->get('start_message'),
-                'model' => $request->get('model')
+                'model' => $request->get('model'),
+                'client_data_enabled' => isset($_POST['show_client_data_enabled'])
             ]
         );
 

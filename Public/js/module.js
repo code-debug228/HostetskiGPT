@@ -62,9 +62,13 @@ function generateAnswer(e) {
     const thread_id = $(e.target).closest(".thread").attr("data-thread_id");
     const mailbox_id = $("body").attr("data-mailbox_id");
 
+    const customer_name = encodeURIComponent($(".customer-name").text());
+    const customer_email = encodeURIComponent($(".customer-email").text().trim());
+    const conversation_subject = encodeURIComponent($(".conv-subjtext span").text().trim());
+
     $('#thread-' + thread_id + ' .thread-info').prepend("<img class=\"gpt-loader\" src=\"/modules/hostetskigpt/img/loading.gif\" alt=\"Test\">");
 
-    fsAjax("mailbox_id=" + mailbox_id + "&query=" + query + "&thread_id=" + thread_id, '/hostetskigpt/generate', function (response) {
+    fsAjax(`mailbox_id=${mailbox_id}&query=${query}&thread_id=${thread_id}&customer_name=${customer_name}&customer_email=${customer_email}&conversation_subject=${conversation_subject}`, '/hostetskigpt/generate', function (response) {
         $("#thread-" + thread_id + " .gpt-answer").last().addClass("hidden");
         addAnswer(thread_id, response.answer);
         $("#thread-" + thread_id + " .gpt-answer").last().removeClass("hidden");
@@ -196,9 +200,12 @@ async function injectGptAnswer(e){
     const query = encodeURIComponent(text);
     const thread_id = thread.attr("data-thread_id");
     const mailbox_id = $("body").attr("data-mailbox_id");
+    const customer_name = encodeURIComponent($(".customer-name").text());
+    const customer_email = encodeURIComponent($(".customer-email").text().trim());
+    const conversation_subject = encodeURIComponent($(".conv-subjtext span").text().trim());
     $(".gptbutton").addClass("disabled");
 
-    fsAjax("mailbox_id=" + mailbox_id + "&command=" + encodeURIComponent(command) + "&query=" + query + "&thread_id=" + thread_id, '/hostetskigpt/generate', function (response) {
+    fsAjax(`mailbox_id=${mailbox_id}&query=${query}&command=${encodeURIComponent(command)}&thread_id=${thread_id}&customer_name=${customer_name}&customer_email=${customer_email}&conversation_subject=${conversation_subject}`, '/hostetskigpt/generate', function (response) {
         $('#body').summernote('pasteHTML', response.answer);
         $(".gptbutton").removeClass("disabled");
     }, true, function() {

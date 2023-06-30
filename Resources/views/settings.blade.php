@@ -18,7 +18,7 @@
             {{ csrf_field() }}
 
             <div class="form-group">
-                <label for="auto_reply_enabled" class="col-sm-2 control-label">{{ __("Enable GPT") }}</label>
+                <label for="gpt_enabled" class="col-sm-2 control-label">{{ __("Enable GPT") }}</label>
 
                 <div class="col-sm-6">
                     <div class="controls">
@@ -66,6 +66,25 @@
                         <option value="gpt-4" {!! $settings['model'] == "gpt-4" ? "selected" : "" !!}>gpt-4</option>
                         <option value="gpt-3.5-turbo" {!! $settings['model'] == "gpt-3.5-turbo" ? "selected" : "" !!}>gpt-3.5-turbo</option>
                     </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="show_client_data_enabled" class="col-sm-2 control-label">{{ __("Send client information to GPT") }}</label>
+
+                <div class="col-sm-6" style="display: inline-flex;">
+                    <div class="controls">
+                        <div class="onoffswitch-wrap">
+                            <div class="onoffswitch">
+                                <input type="checkbox" name="show_client_data_enabled" id="show_client_data_enabled" class="onoffswitch-checkbox"
+                                    {!! $settings['client_data_enabled'] ? "checked" : "" !!}
+                                >
+                                <label class="onoffswitch-label" for="show_client_data_enabled"></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <i style="margin-left: 20px" class="glyphicon glyphicon-info-sign icon-info" data-toggle="popover" data-trigger="hover" data-html="true" data-placement="left" data-content="{{ __('If enabled, information such as the subject, customer name, and email address will be sent to the GPT. After activating this function, you can ask in a prompt, for example, to call the client by name, GPT will know his name.') }}" data-original-title="" title=""></i>
                 </div>
             </div>
 

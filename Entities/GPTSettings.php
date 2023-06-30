@@ -14,5 +14,5 @@ class GPTSettings extends Model
 
     public $incrementing = false;
 
-    protected $fillable = ['mailbox_id', 'api_key', 'token_limit', 'start_message', 'enabled', 'model'];
+    protected $fillable = ['mailbox_id', 'api_key', 'token_limit', 'start_message', 'enabled', 'model', 'client_data_enabled'];
 }
