@@ -72,7 +72,7 @@ class HostetskiGPTServiceProvider extends ServiceProvider
                     "'copiedToClipboard': '{$copiedToClipboard}'," .
                     "'updateAvailable': '{$updateAvailable}'," .
                     "'version': '{$version}'," .
-                    "'start_message': '{$start_message}'," .
+                    "'start_message': `{$start_message}`," .
                 "};";
             echo 'hostetskigptInit();';
         });
