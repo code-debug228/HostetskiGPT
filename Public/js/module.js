@@ -1,6 +1,6 @@
 function hostetskigptInit() {
 	$(document).ready(function(){
-
+	    addModifyPromptAlert();
         if (document.location.pathname.startsWith("/conversation")) {
             const mailbox_id = $("body").attr("data-mailbox_id");
             $.ajax({
@@ -29,7 +29,7 @@ function hostetskigptInit() {
             });
 
             // Add button to reply form
-            $(".conv-reply-body .note-toolbar > .note-btn-group:first").append('<button class="gptbutton btn btn-default btn-sm" aria-label="GPT Antwort" data-original-title="GPT Antwort" onclick="injectGptAnswer(this)">' +
+            $(".conv-reply-body .note-toolbar > .note-btn-group:first").append('<button class="gptbutton btn btn-default btn-sm" aria-label="GPT Antwort" data-original-title="GPT Antwort" onclick="showModifyPromptAlert()">' +
                 '<i class="glyphicon glyphicon-sunglasses"></i>' +
                 '</button>'
             );
@@ -146,20 +146,20 @@ function copyAnswer(e) {
     showFloatingAlert('success', hostetskiGPTData.copiedToClipboard);
 }
 
-async function injectGptAnswer(e){
-    const { value: command } = await Swal.fire({
-        input: 'textarea',
-        inputLabel: 'Anfrage an Chat GPT',
-        inputValue: hostetskiGPTData.start_message+"\n",
-        width: '50em',
-        inputAttributes: {
-            'aria-label': 'Type your message here'
-        },
-        showCancelButton: true
-    })
-    if (!command) {
-        return;
-    }
+async function injectGptAnswer(){
+    // const { value: command } = await Swal.fire({
+    //     input: 'textarea',
+    //     inputLabel: 'Anfrage an Chat GPT',
+    //     inputValue: hostetskiGPTData.start_message+"\n",
+    //     width: '50em',
+    //     inputAttributes: {
+    //         'aria-label': 'Type your message here'
+    //     },
+    //     showCancelButton: true
+    // })
+    // if (!command) {
+    //     return;
+    // }
     const thread = $(".thread-type-customer:first");
     const text = thread.children(".thread-message").children(".thread-body").children(".thread-content").get(0).innerHTML.replace(/<\/?.*?>/g, "").trim();
     const query = encodeURIComponent(text);
@@ -168,7 +168,10 @@ async function injectGptAnswer(e){
     const customer_name = encodeURIComponent($(".customer-name").text());
     const customer_email = encodeURIComponent($(".customer-email").text().trim());
     const conversation_subject = encodeURIComponent($(".conv-subjtext span").text().trim());
+    const command = $("#gpt-modified-prompt").val();
+
     $(".gptbutton").addClass("disabled");
+    hideModifyPromptAlert();
 
     fsAjax(`mailbox_id=${mailbox_id}&query=${query}&command=${encodeURIComponent(command)}&thread_id=${thread_id}&customer_name=${customer_name}&customer_email=${customer_email}&conversation_subject=${conversation_subject}`, '/hostetskigpt/generate', function (response) {
         $('#body').summernote('pasteHTML', response.answer);
@@ -177,4 +180,49 @@ async function injectGptAnswer(e){
         $(".gptbutton").removeClass("disabled");
         showFloatingAlert('error', Lang.get("messages.ajax_error"));
     });
+}
+
+function addModifyPromptAlert() {
+    $('body').append(`
+        <div class="modal fade" aria-hidden="false" tabindex="-1" style="display: none;" id="gpt-prompt-append">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="hideModifyPromptAlert()">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                        <h4 class="modal-title">${hostetskiGPTData.modifyPrompt}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group" style="overflow:auto;">
+                            <textarea class="form-control note-form-control note-input col-md-12" id="gpt-modified-prompt"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" href="#" class="btn btn-primary note-btn note-btn-primary" onclick="injectGptAnswer()">
+                            ${hostetskiGPTData.send}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `);
+    $("#gpt-modified-prompt").val(hostetskiGPTData.start_message);
+}
+
+function showModifyPromptAlert() {
+    const alert = $("#gpt-prompt-append");
+    alert[0].classList.add("in");
+    alert.css("display", "block");
+    $("body").append(`
+        <div class="modal-backdrop fade in"></div>
+    `);
+}
+
+function hideModifyPromptAlert() {
+    const alert = $("#gpt-prompt-append");
+    alert[0].classList.remove("in");
+    alert.css("display", "none");
+    $(".modal-backdrop").remove();
+    $("#gpt-modified-prompt").val(hostetskiGPTData.start_message);
 }

@@ -10,5 +10,6 @@
   "Update available for module ": "Доступно обновление для модуля",
   "Send client information to GPT": "Отправлять GPT информацию о клиенте",
   "If enabled, information such as the subject, customer name, and email address will be sent to the GPT. After activating this function, you can ask in a prompt, for example, to call the client by name, GPT will know his name.": "Если включено, в GPT будет передаваться такая информация, как тема обращения, имя клиента и его email. После активирования этой функции вы можете в подсказке попросить, например, обращаться к клиенту по имени, GPT будет знать его имя.",
-  "Conversation subject is \":subject\", customer name is \":name\", customer email is \":email\"": "Тема обращения \":subject\", имя клиента \":name\", email клиента \":email\""
+  "Conversation subject is \":subject\", customer name is \":name\", customer email is \":email\"": "Тема обращения \":subject\", имя клиента \":name\", email клиента \":email\"",
+  "Complete prompt and send last response from client to GPT": "Дополнить запрос и отправить последний ответ клиета GPT"
 }

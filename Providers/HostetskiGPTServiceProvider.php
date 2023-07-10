@@ -67,12 +67,16 @@ class HostetskiGPTServiceProvider extends ServiceProvider
             $updateAvailable = __('Update available for module ');
             $settings = $this->mailbox ? GPTSettings::find($this->mailbox->id) : null;
             $start_message = $settings ? $settings->start_message : "";
+            $modifyPrompt = __("Complete prompt and send last response from client to GPT");
+            $send = __("Send");
 
             echo "const hostetskiGPTData = {" .
                     "'copiedToClipboard': '{$copiedToClipboard}'," .
                     "'updateAvailable': '{$updateAvailable}'," .
                     "'version': '{$version}'," .
                     "'start_message': `{$start_message}`," .
+                    "'modifyPrompt': `{$modifyPrompt}`," .
+                    "'send': `{$send}`," .
                 "};";
             echo 'hostetskigptInit();';
         });
