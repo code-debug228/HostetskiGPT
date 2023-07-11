@@ -44,7 +44,6 @@ class HostetskiGPTServiceProvider extends ServiceProvider
         // Add module's JS file to the application layout.
         \Eventy::addFilter('javascripts', function($javascripts) {
             array_push($javascripts, \Module::getPublicPath("hostetskigpt").'/js/module.js');
-            array_push($javascripts, "https://cdn.jsdelivr.net/npm/sweetalert2@11");
             return $javascripts;
         });
 
