@@ -1,5 +1,14 @@
 function hostetskigptInit() {
 	$(document).ready(function(){
+        // Add event listeners
+        $(document).on("click", ".chatgpt-get", generateAnswer);
+        $(document).on("click", ".gptbutton", showModifyPromptAlert);
+        $(document).on("click", ".gpt-nav-previous", previousAnswer);
+        $(document).on("click", ".gpt-nav-next", nextAnswer);
+        $(document).on("click", ".gpt-copy-icon", copyAnswer);
+        $(document).on("click", ".gpt-close-modal", hideModifyPromptAlert);
+        $(document).on("click", ".gpt-apply-modal", injectGptAnswer);
+
 	    addModifyPromptAlert();
         if (document.location.pathname.startsWith("/conversation")) {
             const mailbox_id = $("body").attr("data-mailbox_id");
@@ -29,7 +38,7 @@ function hostetskigptInit() {
             });
 
             // Add button to reply form
-            $(".conv-reply-body .note-toolbar > .note-btn-group:first").append('<button class="gptbutton btn btn-default btn-sm" aria-label="GPT Antwort" data-original-title="GPT Antwort" onclick="showModifyPromptAlert()">' +
+            $(".conv-reply-body .note-toolbar > .note-btn-group:first").append('<button class="gptbutton btn btn-default btn-sm" aria-label="GPT Antwort" data-original-title="GPT Antwort">' +
                 '<i class="glyphicon glyphicon-sunglasses"></i>' +
                 '</button>'
             );
@@ -87,18 +96,18 @@ function addAnswer(thread_id, text) {
             <br />
             <div class="gpt-answers-data">
                 <div class="gpt-nav">
-                    <svg onclick="previousAnswer(event)" style="margin-right: 2px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+                    <svg style="margin-right: 2px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left gpt-nav-previous" viewBox="0 0 16 16">
                         <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
                     </svg>
                     <span class="gpt-current-answer">1</span>/<span class="gpt-max-answer">1</span>
-                    <svg onclick="nextAnswer(event)" style="margin-left: 2px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right gpt-next" viewBox="0 0 16 16">
+                    <svg style="margin-left: 2px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right gpt-nav-next" viewBox="0 0 16 16">
                         <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
                     </svg>
                 </div>
                 <div class="gpt-answers">
 
                 </div>
-                <span class="gpt-copy-icon" onclick="copyAnswer(event)">
+                <span class="gpt-copy-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard" viewBox="0 0 16 16">
                         <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
                         <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
@@ -188,7 +197,7 @@ function addModifyPromptAlert() {
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="hideModifyPromptAlert()">
+                        <button type="button" class="close gpt-close-modal" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">×</span>
                         </button>
                         <h4 class="modal-title">${hostetskiGPTData.modifyPrompt}</h4>
@@ -199,7 +208,7 @@ function addModifyPromptAlert() {
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" href="#" class="btn btn-primary note-btn note-btn-primary" onclick="injectGptAnswer()">
+                        <button type="submit" href="#" class="btn btn-primary note-btn note-btn-primary gpt-apply-modal">
                             ${hostetskiGPTData.send}
                         </button>
                     </div>

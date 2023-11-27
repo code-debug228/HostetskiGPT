@@ -91,7 +91,7 @@ class HostetskiGPTServiceProvider extends ServiceProvider
                 return;
             }
             ?>
-            <li><a class="chatgpt-get" href="#" target="_blank" onclick='generateAnswer(event)' role="button"><?php echo __("Generate answer (GPT)")?></a></li>
+            <li><a class="chatgpt-get" href="#" target="_blank" role="button"><?php echo __("Generate answer (GPT)")?></a></li>
             <?php
         }, 100);
 
