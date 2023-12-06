@@ -66,6 +66,8 @@
                         <option value="gpt-3.5-turbo" {!! $settings['model'] == "gpt-3.5-turbo" ? "selected" : "" !!}>gpt-3.5-turbo</option>
                         <option value="gpt-3.5-turbo-16k" {!! $settings['model'] == "gpt-3.5-turbo-16k" ? "selected" : "" !!}>gpt-3.5-turbo-16k</option>
                         <option value="gpt-4" {!! $settings['model'] == "gpt-4" ? "selected" : "" !!}>gpt-4</option>
+                        <option value="gpt-4-1106-preview" {!! $settings['model'] == "gpt-4-1106-preview" ? "selected" : "" !!}>gpt-4-1106-preview</option>
+                       
                     </select>
                 </div>
             </div>
